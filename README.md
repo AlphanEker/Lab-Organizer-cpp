@@ -5,7 +5,7 @@ A pure cpp program to organize lab chemicals.
 
 
   Scientists in the chemistry lab need a software tool to keep track of combustible and retardant chemicals that are stored in the lab cabinets. In ordinary circumstances this software would simply be required to keep the location of each chemical in the cabinets. However, since some of the chemicals are combustible, scientists need to employ a specific strategy to minimize the risk of fire. That is since combustive materials are likely to ignite if in contact, no two combustive chemicals can be placed next to each other. Therefore the software designed for the lab needs to account for this rule.
-The cabinets in the lab have varying heights and widths which are measured with the number of individual storage slots. The rows in the cabinet are marked with the English alphabet, while columns are numbered with integers starting from 1. Below is an illustration of a cabinet with three rows and three columns.
+The cabinets in the lab have varying heights and widths which are measured with the number of individual storage slots. The rows in the cabinet are marked with the English alphabet, while columns are numbered with integers starting from 1. Below is an illustration of a cabinet with three rows and five columns.
 
                1       2       3       4       5        
         --------------------------------------------
