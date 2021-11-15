@@ -24,5 +24,11 @@ public:
     int getRow();
     int getColumn();
     int plusCount();
+    void changeId(int id);
+    void changeRow(int row);
+    void changeColumn (int column);
+    Cabinet &operator=( Cabinet &right);
+    bool checkId(int id);
+    int getChemicalId(int row,int column);
 
 };

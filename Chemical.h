@@ -12,5 +12,6 @@ public:
     int getId();
     void changeID(int newId);
     string getType();
-    
+    void changeType(string type);
+    string getType2();
 };

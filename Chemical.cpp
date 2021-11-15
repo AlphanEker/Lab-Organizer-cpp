@@ -31,7 +31,13 @@ string Chemical::getType(){
     }
     
 }
+string Chemical::getType2(){
+    return chemType;
+}
 
 void Chemical::changeID(int newId){
     this->chemID = newId;
+}
+void Chemical::changeType(string type){
+    this->chemType = type;
 }
