@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <iostream>
 #include <stdlib.h>
 #include "LabOrganizer.h"
