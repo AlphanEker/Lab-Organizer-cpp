@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Cabinet.h"
+#include <stdlib.h>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -16,5 +17,6 @@ TEST(HelloTest, BasicAssertions) {
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  std::cout << RUN_ALL_TESTS();
+  return 0;
 }
