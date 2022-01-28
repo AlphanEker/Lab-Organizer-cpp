@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string.h>
+#include <gtest/gtest.h>
 #include "LabOrganizer.h"
+
+//#define TEST()
 using namespace std;
 
 LabOrganizer::LabOrganizer(){
@@ -17,7 +20,6 @@ LabOrganizer::LabOrganizer(){
     this->alphabet[8] = "I";
 }
 LabOrganizer::~LabOrganizer(){
-    delete[] adder;
     for (int i = 0; i < size; i++)
     {
         delete cabinets[i];
@@ -27,22 +29,31 @@ LabOrganizer::~LabOrganizer(){
 }
 void LabOrganizer::addCabinet(int id, int rows, int columns){
     if(size == 0){
+        if(rows <= 0 || columns <= 0 || rows > 9 || columns > 9){
+            cout<<"non acceptable row or column number!! "<<endl;
+            return;
+        }
         if(id >0 && rows > 0 && columns > 0){
             cabinets = new Cabinet*[1];
             cabinets[0] = new Cabinet(id,rows,columns);
             size++;
+
+            cout<<"Cabninet with ID: "<<id<<"and dimesions DIM:"<<rows<<"x"<<columns<<"succesfully created"<<endl;
         }
     }
     else if (size > 0){
         for (int i = 0; i < size; i++)
         {
             if(cabinets[i]->getId() == id){
-                cout<<"ID already exists, cabinet couldnt be created!"<<endl;
+                cout<<"ID already exists, ID: "<<id<<" cabinet couldnt be created!"<<endl;
                 return;
             }
         }
-        
-        if(id >0 && rows > 0 && columns > 0){
+        if(rows <= 0 || columns <= 0 || rows > 9 || columns > 9){
+            cout<<"non acceptable row or column number!! "<<endl;
+            return;
+        }
+        if(id >0 && rows > 0 && columns > 0 && rows <= 9 && columns <= 9){
             
             Cabinet** temp = new Cabinet*[size];
             for (int i = 0; i < size; i++)
@@ -75,6 +86,7 @@ void LabOrganizer::addCabinet(int id, int rows, int columns){
             }
             delete[] temp;
             size++;
+            cout<<"Cabninet with ID: "<<id<<"and dimesions DIM: "<<rows<<"x"<<columns<<", succesfully created"<<endl;
         }
         
         
@@ -143,10 +155,11 @@ void LabOrganizer::locationFind(string place){
             check1 = true;
         }
     }
-    if (0 < stoi(place.substr(1,1)) && stoi(place.substr(1,1))  <=9)
+    if (0 < atoi(place.substr(1,1).c_str()) && atoi(place.substr(1,1).c_str())  <=9)
+
     {
         check2 = true;
-        this->changer[1] = stoi(place.substr(1,1))-1;
+        this->changer[1] = atoi(place.substr(1,1).c_str())-1;
     }
     
     
@@ -172,7 +185,8 @@ void LabOrganizer::placeChemical(int cabinetId, string location, string chemType
                 }
 
             }
-            column = stoi(location.substr(1,1))-1;
+            column = atoi(location.substr(1,1).c_str())-1;
+            
         }
     }
    
@@ -190,6 +204,7 @@ void LabOrganizer::placeChemical(int cabinetId, string location, string chemType
                 if(chemType == "combustive"){
                     if(checkSurrounding(row,column,cabinets[inx])){
                         cabinets[inx]->placeChemical(row,column,chemType,chemID);
+                        cout<<"combustive chemical succesfully added with ID: "<<chemID<<" into location: "<<location<<endl;
                     }
                     else{
                         cout<<"Can not place chemical due to combustive chemicals closesency here are the closest available spots :"<<endl;
@@ -199,6 +214,7 @@ void LabOrganizer::placeChemical(int cabinetId, string location, string chemType
                 else if (chemType == "retardant")
                 {
                     cabinets[inx]->placeChemical(row,column,chemType,chemID);
+                    cout<<"retardant chemical succesfully added with ID: "<<chemID<<" into location: "<<location<<endl;
                 }
                 else{
                     cout<<"not readable chemical type"<<endl;
@@ -221,14 +237,19 @@ void LabOrganizer::placeChemical(int cabinetId, string location, string chemType
 }
 void LabOrganizer::listCabinets(){
     string a;
+    if(size == 0){
+        cout<<"NO CABINETS EXISTS!"<<endl;
+        return;
+    }
     cout<<"list of all cabinets:"<<endl;
     for (int i = 0; i < size; i++)
     {
-        a = a + "ID: "+to_string(cabinets[i]->getId()) + ", ";
-        a = a + "DIM: " + to_string(cabinets[i]->getRow()) + "x" + to_string(cabinets[i]->getColumn()) +", ";
-        a = a+ "Number of empty slots: " + to_string(cabinets[i]->plusCount())+ "\n";
+        cout<<"ID : "<< cabinets[i]->getId()<<" ,DIM: "<<cabinets[i]->getRow()<<"x"<<cabinets[i]->getColumn()<<", Number of empty slots: "<<cabinets[i]->plusCount()<<"\n";
+        // a = a + "ID: "+to_string(cabinets[i]->getId()) + ", ";
+        // a = a + "DIM: " + to_string(cabinets[i]->getRow()) + "x" + to_string(cabinets[i]->getColumn()) +", ";
+        // a = a+ "Number of empty slots: " + to_string(cabinets[i]->plusCount())+ "\n";
     }
-    cout<<a;
+    cout<<endl;
     
 }
 
@@ -290,8 +311,8 @@ void LabOrganizer::findClosest(int row, int column,int cabinetIndex){
                 }
 
             }
+        cc = atoi(arr1[i].substr(1,1).c_str())-1;
 
-        cc = stoi(arr1[i].substr(1,1))-1;
         if(abs(rr-row)>=abs(cc-column)){
             arr2[i] = abs(rr-row);
         }
@@ -321,7 +342,7 @@ void LabOrganizer::findClosest(int row, int column,int cabinetIndex){
 string LabOrganizer::reverseLocation(int row,int column){
     string a = "";
     a = a + alphabet[row];
-    a = a + to_string(column + 1);
+    a = a + (char)(48+column + 1);
     return a;
 }
 void LabOrganizer::cabinetContents(int id){
@@ -336,7 +357,7 @@ void LabOrganizer::cabinetContents(int id){
         cabinets[wantedIndex]->contents();
     }
     if(wantedIndex == -1){
-        cout<<"Cabinet with ID: "<<id<<"is not available"<<endl;
+        cout<<"Cabinet with ID: "<<id<<" is not available"<<endl;
     }
     
 }
@@ -344,7 +365,10 @@ void LabOrganizer::cabinetContents(int id){
 bool LabOrganizer::checkSurrounding(int row, int column, Cabinet* point){
     int matrixRow = point->getRow();
     int matrixColumn = point->getColumn();
-    bool right, left, up, down = false;
+    bool right, left, up, down;
+    left = false;
+    right = false;
+    down = false;
     up = false;
     if(row-1 >= 0){
         if(point->getTypeChem(row-1,column) == "c"){
@@ -451,4 +475,31 @@ void LabOrganizer::removeChemical(int id){
         cout<<"Id: "<<id<<" Does Not EXSISTS!!"<<endl;
     }
     
+}
+void LabOrganizer::findChemical(int id){
+    int inx = -1;
+    string location;
+    for (int i = 0; i < size; i++)
+    {
+        if(cabinets[i]->checkId(id)){
+            inx = i;
+        }
+    }
+    if(inx == -1){
+        cout<<"Chemical with id: "<<id<<" does not exsists"<<endl;
+    }
+    else{
+        cout<<"Chemical with id: "<<id<<" is in cabinet: "<<cabinets[inx]->getId();
+        for (int i = 0; i < cabinets[inx]->getRow(); i++)
+        {
+            for (int j = 0; j < cabinets[inx]->getColumn(); j++)
+            {
+                if(cabinets[inx]->getChemicalId(i,j) == id){
+                    cout<<"with location: "<<alphabet[i]<<j+1<<endl;
+                }
+            }
+            
+        }
+        
+    }
 }

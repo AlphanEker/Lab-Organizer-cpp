@@ -68,11 +68,11 @@ string Cabinet::getTypeChem2(int row,int column){
     
 }
 void Cabinet::placeChemical(int row, int column, string chemType, int chemID){
-
+    delete chemicals[row][column];
     this->chemicals[row][column] = new Chemical(chemID, chemType);
 }
 void Cabinet::removeChenical(int row,int column){
-
+    delete chemicals[row][column];
     this->chemicals[row][column] = new Chemical();
 }
 void Cabinet::findChemical(int id){
@@ -82,7 +82,7 @@ void Cabinet::findChemical(int id){
         for (int j = 0; j < columns; j++)
         {
             if(chemicals[i][j]->getId() == id ){
-                cout << alphabet[i] + to_string(j+1)<<endl;
+                cout << alphabet[i] << j+1<<endl;
                 a = true;
             }
         }
@@ -90,17 +90,30 @@ void Cabinet::findChemical(int id){
     }
 
     if(!a)
-    cout << to_string(id) << " not found"<<endl;
+    cout << id<< " not found"<<endl;
 }
 int Cabinet::getId(){
     return id_cabinet;
 }
 void Cabinet::contents(){
+    cout<<"Cabinet with ID: "<<id_cabinet<<" and with DIM: "<<rows<<"x"<<columns<<" Contains the Chemicals: "<<endl;
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            if(chemicals[i][j]->getId() != 0){
+                cout<<" chemical:"<<chemicals[i][j]->getId()<<" is in location: "<<alphabet[i]<<j+1;
+            }
+        }
+        
+    }
+    cout<<endl;
+    
     string* arr = new string[rows];
     string out = "         ";
     for (int i = 0; i < columns; i++)
     {
-        out = out + to_string(i+1) + "    " ;
+        out = out + (char)(i+1+48) + "    " ;
     }
     out = out + "\n"+ "\n";
 
@@ -143,18 +156,20 @@ int Cabinet::plusCount(){
     
 }
 Cabinet& Cabinet::operator=( Cabinet& right ) {
-    if(&right != this){
+    if(&right != this && right.getColumn()>0 && right.getRow()>0){
 
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < columns; j++)
-            {
-                delete this->chemicals[i][j];
-            }
-            delete[] this->chemicals[i];
-            if(i == rows-1)
-            delete[] this->chemicals;
-        }
+////PROBLEM TO SOLVEEEEEEEEEE44EEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        
+        // for (int i = 0; i < rows; i++)
+        // {
+        //     for (int j = 0; j < columns; j++)
+        //     {
+        //         delete this->chemicals[i][j];
+        //     }
+        //     delete[] this->chemicals[i];
+        //     delete[] this->chemicals;
+        // }
+        
         this->changeRow(right.getRow());
         this->changeColumn(right.getColumn());
         this->changeId(right.getId());
@@ -173,6 +188,8 @@ Cabinet& Cabinet::operator=( Cabinet& right ) {
             }
             
         }
+        
+        
         
     }
     return *this;
